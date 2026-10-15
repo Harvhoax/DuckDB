@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Central Mart · Sales overview</title>
+<style>
+:root{font-family:Inter,Segoe UI,Arial,sans-serif;color:#17352e;background:#f3f5f1;font-size:15px}*{box-sizing:border-box}body{margin:0}header{background:#143d32;color:white;padding:22px max(5vw,20px);display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-size:21px;font-weight:750;letter-spacing:-.6px}.mark{background:#c5e997;color:#153f32;padding:7px 10px;border-radius:9px;margin-right:10px}.badge{border:1px solid #799b8a;padding:7px 12px;border-radius:30px;font-size:12px}main{max-width:1200px;margin:auto;padding:34px 24px}h1{font-size:34px;letter-spacing:-1.2px;margin:5px 0 10px}h2{font-size:17px;margin:0 0 9px}p{color:#68786e;line-height:1.6;margin:7px 0}.eyebrow{text-transform:uppercase;font-size:11px;font-weight:750;letter-spacing:1.7px;color:#5f7764}.intro{display:flex;justify-content:space-between;gap:24px;align-items:center;margin-bottom:25px}.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}select,button{font:inherit;border-radius:8px;padding:11px 13px;border:1px solid #d5ded1;background:white;color:#17352e}button{background:#1d5945;color:white;cursor:pointer;font-weight:650;border-color:#1d5945}button:disabled{opacity:.55;cursor:wait}button:hover:enabled{background:#123e2f}a{color:#21624c;text-underline-offset:3px;font-size:12px}a:focus,button:focus,select:focus{outline:3px solid #9cc771;outline-offset:3px}.status{font-size:13px;margin:0 0 18px;padding:11px 15px;background:#e5eddf;border-radius:8px;color:#3b613c}.status.error{background:#ffe8e3;color:#9d3625}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:white;border:1px solid #dfe5db;border-radius:13px;padding:21px}.metric-label{font-size:12px;color:#64766a}.number{font-size:27px;font-weight:750;letter-spacing:-.8px;margin:12px 0 7px}.hint{font-size:11px;color:#78867c}.panels{display:grid;grid-template-columns:1.15fr 1fr;gap:18px;margin-top:18px}.card-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:15px}.sub{font-size:12px;color:#6c7e70}.bar-row{margin:18px 0}.bar-label{display:flex;justify-content:space-between;font-size:12px;gap:10px;margin-bottom:7px}.track{height:10px;background:#edf2e9;border-radius:6px;overflow:hidden}.fill{height:100%;background:#397b59;border-radius:6px}.bar-row:nth-child(2n) .fill{background:#94b776}table{border-collapse:collapse;width:100%;font-size:12px}th{text-align:left;font-weight:600;color:#728072;border-bottom:1px solid #e2e8de}td,th{padding:12px 6px}td:last-child,th:last-child{text-align:right}tr+tr td{border-top:1px solid #f0f3ed}.table-wrap{overflow:auto}.pipeline{display:flex;gap:8px;align-items:stretch;margin-top:18px}.step{flex:1;background:#f1f5eb;padding:15px 12px;border-radius:8px;font-size:12px}.step b{display:block;margin-bottom:6px}.step span{color:#758371;line-height:1.5;font-size:11px}.arrow{align-self:center;color:#93a28d}.foot{font-size:11px;margin-top:15px}.empty{padding:20px;color:#6c7e70}.notice{margin-top:10px;font-size:11px}.benchmark .fill{background:#284d3d}.benchmark .parquet .fill{background:#a5c879}footer{display:flex;justify-content:space-between;gap:15px;margin-top:25px;font-size:11px;color:#7d8b7d} [hidden]{display:none!important}@media(max-width:800px){.intro{display:block}.controls{margin-top:18px}.grid{grid-template-columns:repeat(2,1fr)}.panels{grid-template-columns:1fr}.pipeline{flex-wrap:wrap}.step{min-width:40%}.arrow{display:none}.number{font-size:23px}h1{font-size:29px}}@media(max-width:420px){main{padding:25px 14px}.grid{gap:8px}.card{padding:15px}.badge{font-size:10px}header{padding:18px 14px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><span class="mark">CM</span>Central Mart</div><div class="badge">Retail analytics · Synthetic data</div></header>
+<main>
+<div class="intro"><div><div class="eyebrow">Retail operations / 2025</div><h1>A clearer picture of your sales.</h1><p>Four stores. One local batch. The numbers that matter.</p></div>
+<div><div class="controls"><label for="rows" class="sub">Orders</label><select id="rows"><option value="10000">10,000</option><option value="100000" selected>100,000</option><option value="1000000">1,000,000</option></select><button id="run">Run demo batch</button></div><p class="notice">Replaces generated data and reports · 4 worker threads</p></div></div>
+<div id="status" class="status" role="status" aria-live="polite">Loading local reports…</div>
+<section class="grid" aria-label="Sales summary">
+<div class="card"><div class="metric-label">Net sales</div><div class="number" id="sales">—</div><div class="hint">INR · discounts and full returns accounted for</div></div>
+<div class="card"><div class="metric-label">Orders received</div><div class="number" id="orders">—</div><div class="hint" id="completed">All final order statuses</div></div>
+<div class="card"><div class="metric-label">Return rate</div><div class="number" id="returns">—</div><div class="hint">Returned orders / all orders</div></div>
+<div class="card"><div class="metric-label">Parquet storage saving</div><div class="number" id="saving">—</div><div class="hint" id="sizes">Compared with the CSV export</div></div>
+</section>
+<div class="panels">
+<section class="card"><div class="card-head"><div><h2>Store performance</h2><div class="sub">Net sales after discounts · INR</div></div><a href="/download/store_performance.csv" download>Download CSV</a></div><div id="stores" class="empty">Run a batch to see store sales.</div></section>
+<section class="card"><div class="card-head"><div><h2>Best-selling products</h2><div class="sub">Top five by net sales</div></div><a href="/download/top_products.csv" download>Download CSV</a></div><div id="products" class="table-wrap"></div></section>
+<section class="card"><div class="card-head"><div><h2>Monthly sales</h2><div class="sub">Order month · final completed orders</div></div><a href="/download/monthly_revenue.csv" download>Download CSV</a></div><div id="months" class="table-wrap"></div></section>
+<section class="card benchmark"><div class="card-head"><div><h2>CSV vs. Parquet</h2><div class="sub">Store report · median query time</div></div><a href="/download/benchmark.json" download>Raw results</a></div><div id="bench"></div><p class="foot">Shorter is faster. Warm-cache measurements; performance varies by hardware and data size.</p><div id="statuses" class="foot"></div></section>
+</div>
+<section class="card" style="margin-top:18px"><h2>What happens behind the numbers?</h2><p class="sub">Local parallel processing with DuckDB — no Spark or Hadoop cluster required.</p><div class="pipeline"><div class="step"><b>01 / Generate CSV</b><span>Synthetic orders, stores and product catalog.</span></div><div class="arrow">→</div><div class="step"><b>02 / Store as Parquet</b><span>Compressed columns reduce storage and scanning.</span></div><div class="arrow">→</div><div class="step"><b>03 / Process in parallel</b><span>Join, filter and aggregate with CPU workers.</span></div><div class="arrow">→</div><div class="step"><b>04 / Report & validate</b><span>Compare results across formats and thread counts.</span></div></div></section>
+<footer><span>Demonstration only · Fictional stores and transactions</span><span>DuckDB · Single-machine parallelism</span></footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const number=new Intl.NumberFormat('en-IN');
+const rupees=v=>'₹'+new Intl.NumberFormat('en-IN',{maximumFractionDigits:0}).format(Number(v)/100);
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function table(headers,rows){return '<table><thead><tr>'+headers.map(h=>'<th scope="col">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(v=>'<td>'+esc(v)+'</td>').join('')+'</tr>').join('')+'</tbody></table>'}
+function bar(label,value,width,extra=''){return `<div class="bar-row ${extra}"><div class="bar-label"><span>${esc(label)}</span><b>${esc(value)}</b></div><div class="track"><div class="fill" style="width:${Math.max(0,Math.min(100,width))}%"></div></div></div>`}
+function render(data){
+ const r=data.reports,b=data.benchmark;
+ const states=Object.fromEntries(r.order_status.map(x=>[x.status,Number(x.orders)]));
+ const total=Object.values(states).reduce((a,v)=>a+v,0);
+ const sales=r.store_performance.reduce((a,x)=>a+Number(x.net_sales_paise),0);
+ $('sales').textContent=rupees(sales);$('orders').textContent=number.format(total);
+ $('completed').textContent=number.format(states.Completed||0)+' completed orders';
+ $('returns').textContent=(total?100*(states.Returned||0)/total:0).toFixed(1)+'%';
+ $('saving').textContent=(100*(1-b.parquet_bytes/b.csv_bytes)).toFixed(1)+'%';
+ $('sizes').textContent=(b.csv_bytes/1e6).toFixed(1)+' MB CSV → '+(b.parquet_bytes/1e6).toFixed(1)+' MB Parquet';
+ const max=Math.max(1,...r.store_performance.map(x=>Number(x.net_sales_paise)));
+ $('stores').className='';$('stores').innerHTML=r.store_performance.map(x=>bar(x.city,rupees(x.net_sales_paise),100*Number(x.net_sales_paise)/max)).join('')||'<p>No completed sales.</p>';
+ $('products').innerHTML=table(['Product','Units','Net sales'],r.top_products.map(x=>[x.product_name,number.format(x.units_sold),rupees(x.net_sales_paise)]));
+ $('months').innerHTML=table(['Month','Net sales'],r.monthly_revenue.map(x=>[new Date(x.month+'-01T00:00:00').toLocaleDateString('en-IN',{month:'short',year:'numeric'}),rupees(x.net_sales_paise)]));
+ const timings=b.benchmarks.filter(x=>x.query==='store_performance');
+ const slowest=Math.max(0.000001,...timings.map(x=>x.median_seconds));
+ $('bench').innerHTML=timings.map(x=>bar(x.format+' · '+x.threads+' thread'+(x.threads===1?'':'s'),(x.median_seconds*1000).toFixed(1)+' ms',x.median_seconds/slowest*100,x.format==='Parquet'?'parquet':'')).join('');
+ $('statuses').textContent='Completed: '+number.format(states.Completed||0)+' · Returned: '+number.format(states.Returned||0)+' · Cancelled: '+number.format(states.Cancelled||0);
+}
+let polling=false;
+async function refresh(){
+ if(polling)return;polling=true;
+ try{
+  const response=await fetch('/api/reports');const data=await response.json();if(!response.ok)throw Error(data.error||'Could not load reports.');
+  $('run').disabled=data.running;
+  $('status').classList.toggle('error',Boolean(data.error));
+  if(data.running){$('status').textContent='Processing orders… generating CSV, converting to Parquet, running queries and validating reports. Previous results remain visible until this batch finishes.';}
+  else{
+   if(data.reports)render(data);
+   $('status').textContent=data.error?'Batch failed: '+data.error:(data.empty?'No reports yet. Choose an order count and run a demo batch.':'Validated · '+number.format(data.benchmark.rows)+' orders · CSV and Parquet query results match across thread counts.');
+  }
+ }catch(e){$('status').classList.add('error');$('status').textContent='Unable to load reports: '+e.message+' Check that dashboard.py is running.';}
+ finally{polling=false;}
+}
+$('run').addEventListener('click',async()=>{
+ $('run').disabled=true;
+ try{
+  const response=await fetch('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rows:Number($('rows').value)})});
+  const data=await response.json();if(!response.ok)throw Error(data.error||'Could not start batch.');
+  await refresh();
+ }catch(e){$('status').classList.add('error');$('status').textContent=e.message;$('run').disabled=false;}
+});
+refresh();setInterval(refresh,2500);
+</script>
+</body></html>
